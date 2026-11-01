@@ -88,21 +88,49 @@ Items resolved earlier and later superseded are in
     impedance, estimated parasitics) in `simulation/` and compare against
     [design/04-timing-and-recovery.md](design/04-timing-and-recovery.md)'s
     hand estimates before ordering.
-22. Create the KiCad project and library tables in `hardware/`, including a
-    CY8C4125LQI-S425 (QFN) footprint/header for the target connection.
-23. Lay out the parallel Rs and delay-element footprints described in
+22. ~~Create the KiCad project and library tables in `hardware/`.~~
+    **Done 2026-11-01:** `hardware/ultra-fast-gate-driver.kicad_pro`,
+    `sym-lib-table`, `fp-lib-table`, and a first-pass schematic
+    (`hardware/ultra-fast-gate-driver.kicad_sch`) now exist, with U1, Q1, the
+    gate resistors, bypass caps, the Rs bank, the IN- placeholder, the LED,
+    and generic connector placeholders placed and wired. **Still needed:** a
+    real footprint/header for the target IC connection once its full
+    ordering code and package are confirmed (CY8C4125LQI-S425 is QFN, but
+    this board connects to it via a cable/header, not by hosting the chip
+    itself — J3 is currently a generic 2-pin placeholder).
+23. **Resolve one remaining ERC item on the schematic:** `kicad-cli sch erc`
+    reports a `multiple_net_names` warning (and a related `pin_to_pin` error
+    on the two PWR_FLAG markers) saying the TRIG label and the +5V net near
+    J1 are "attached to the same items." Direct inspection of the file's wire
+    coordinates found no actual overlapping segment, and removing the
+    PWR_FLAGs entirely does not clear it, so the cause is narrower than a
+    simple wiring mistake — likely a net-naming interaction specific to how
+    local (non-global) labels merge with an unnamed power-symbol net. This
+    is best resolved interactively in the KiCad GUI: open the schematic, run
+    Inspect → Electrical Rules Checker, and use "Highlight Net" on the TRIG
+    label and on the +5V symbol near J1 to see exactly what KiCad considers
+    connected. Every other wiring in the schematic was verified correct by
+    direct visual inspection (see
+    [decisions/decision-log.md](decisions/decision-log.md) for the pin-
+    coordinate convention this uncovered and fixed).
+24. Lay out the parallel Rs and delay-element footprints described in
     [design/04-timing-and-recovery.md](design/04-timing-and-recovery.md) and
-    [design/02-pulse-generation.md](design/02-pulse-generation.md).
-24. Four-layer (or higher) stackup, per the LMG1025-Q1's layout requirements —
+    [design/02-pulse-generation.md](design/02-pulse-generation.md) — the
+    schematic places the Rs bank (4 resistors, 3 marked DNP) but the delay
+    element is still just a placeholder (R5).
+25. Four-layer (or higher) stackup, per the LMG1025-Q1's layout requirements —
     pick a fab and confirm capability.
-25. Confirm the Würth LED's forward voltage against its own datasheet (only
+26. Confirm the Würth LED's forward voltage against its own datasheet (only
     distributor listings were available at selection time).
-26. Decide on a scope-friendly probe pad at the target node with a short
+27. Decide on a scope-friendly probe pad at the target node with a short
     ground return, for measuring actual glitch shape.
+28. Pick real connector part numbers for J1 (BeagleBone interface), J2 (3V3
+    supply in), and J3 (target node out) — all three are currently generic
+    `Connector_Generic` placeholders in the schematic, not vendored parts.
 
 ## Review
 
-27. Review the complete design — including the maximum on-time protection,
+29. Review the complete design — including the maximum on-time protection,
     Rs sizing/fusing, and the scope note in
     [design/06-safety-and-protection.md](design/06-safety-and-protection.md) —
     with a qualified engineer before first power-up against a real target IC.

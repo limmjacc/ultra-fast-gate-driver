@@ -1,0 +1,6 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "local")(type "KiCad")(uri "${KIPRJMOD}/libraries/local/footprints.pretty")(options "")(descr "Project-original footprints for ultra-fast-gate-driver"))
+	(lib (name "ti-lmg1025-q1")(type "KiCad")(uri "${KIPRJMOD}/libraries/vendored/ti-lmg1025-q1/wson-6-2x2mm-dee0006a.pretty")(options "")(descr "WSON-6 2x2mm footprint for LMG1025QDEERQ1 (DEE0006A package), vendored from KiCad's own official Package_DFN_QFN library (CC-BY-SA 4.0)"))
+	(lib (name "infineon-bss806n")(type "KiCad")(uri "${KIPRJMOD}/libraries/vendored/infineon-bss806n/sot-23-bss806n.pretty")(options "")(descr "SOT-23 footprint for BSS806N, vendored from KiCad's own official Package_TO_SOT_SMD library (CC-BY-SA 4.0)"))
+)

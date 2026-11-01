@@ -298,3 +298,48 @@ from this board's hardware.
 **Full detail:** [../design/08-target-ic.md](../design/08-target-ic.md),
 rewritten with the confirmed part number in place of the earlier ambiguity
 analysis.
+
+## 13. KiCad project and first-pass schematic built
+
+**Decided:** populate the actual KiCad project — library tables, vendored
+parts, and a first-pass schematic — rather than leave the design as
+documentation only. `hardware/ultra-fast-gate-driver.kicad_pro`,
+`sym-lib-table`, `fp-lib-table`, and `ultra-fast-gate-driver.kicad_sch` now
+exist, with U1 (LMG1025-Q1), Q1 (BSS806N), the gate resistors, VDD bypass
+caps, the Rs bank (4 footprints, 3 marked DNP), the IN- placeholder, the
+power LED, and generic connector placeholders for J1–J3 all placed and
+wired.
+
+**A real, reusable finding came out of building this:** KiCad's symbol
+library format stores pin coordinates in a Y-up convention (matching how the
+symbol *library editor* displays them), but the schematic *sheet* is Y-down.
+Placing a symbol on a sheet negates the pin's local Y before applying the
+instance's own rotation — confirmed by testing the real, unmodified
+`Transistor_FET:Q_NMOS_GSD` symbol from KiCad's own bundled library, which
+showed the identical transform. This matters for this project specifically
+because [ti-lmg1025-q1](../../hardware/libraries/vendored/ti-lmg1025-q1/) and
+[infineon-bss806n](../../hardware/libraries/vendored/infineon-bss806n/) are
+hand-placed (not drawn through the KiCad GUI, which would apply this
+transform automatically and invisibly) — any future hand-authored placement
+math for these parts, or new vendored parts added the same way, needs to
+apply this same Y-negation.
+
+**Verification approach, given the file was built programmatically rather
+than drawn in the GUI:** `kicad-cli sch export svg`, rendered and visually
+inspected pin-by-pin (not just via `kicad-cli sch erc`'s text output, which
+was found to report pin positions inconsistently with the actual rendered —
+and electrically real — geometry in at least one case during this process;
+treat its coordinates as a rough locator, not ground truth, and confirm
+anything it flags against the rendered image or the live GUI). This caught
+and fixed several real issues beyond the coordinate convention itself:
+overlapping reference/value text on rotated parts, a double-applied vertical
+offset, and five backwards sign errors in manually-placed GND/+5V symbol
+offsets.
+
+**What's left open on the schematic itself:** one ERC warning
+(`multiple_net_names`, TRIG/+5V near J1) that direct file inspection could
+not explain and that removing the related PWR_FLAGs did not clear — flagged
+in [../open-items.md](../open-items.md) item 23 for a quick interactive check
+in the GUI rather than further blind editing. The delay element (R5) and all
+three connectors (J1–J3) remain placeholders pending the decisions tracked
+elsewhere in the open items list.
