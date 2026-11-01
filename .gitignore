@@ -1,0 +1,19 @@
+# KiCad
+*.kicad_prl
+*.bak
+*.kicad_pcb-bak
+*.kicad_sch-bak
+_autosave-*
+fp-info-cache
+*-backups/
+*.lck
+*.000
+*.pro.bak
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+*.swp
