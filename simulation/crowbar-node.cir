@@ -1,0 +1,47 @@
+* Crowbar node transient model - ultra-fast-gate-driver
+* First-order model of glitching a live target rail. The target supply Vrail
+* reaches the injection node through its supply-path resistance Rsrc and
+* inductance Lsrc. On a nanosecond timescale Lsrc isolates the node from the
+* upstream supply, so the small node capacitance Cnode (local decoupling
+* removed) collapses through the FET + Rs and then recovers. This ignores
+* gate-loop and board inductance, so a real board is slower and will ring.
+* Run: ngspice -b crowbar-node.cir   (also loads in KiCad's simulator)
+
+.param VR=3.3        ; target rail voltage
+.param RSRC=0.5      ; target supply-path resistance (ohm)
+.param LS=50n        ; target supply-path inductance (H) - isolates node at ns
+.param CN=225p       ; node capacitance, local decoupling removed (F)
+.param CDEC=0        ; extra decoupling left on the node (F); 0 = removed
+.param RDSON=0.057   ; BSS806N max on-resistance (ohm)
+.param RS=10
+
+Vrail rail 0 DC {VR}
+Rsrc  rail a {RSRC}
+Lsrc  a node {LS}
+Cnode node 0 {CN}
+Cdec  node 0 {CDEC}
+Rs    node drn {RS}
+Sfet  drn 0 gate 0 swmod
+.model swmod SW(Ron={RDSON} Roff=1e9 Vt=1 Vh=0.1)
+* gate: off, 10 ns on-pulse starting at 5 ns, then off
+Vgate gate 0 PWL(0 0  5n 0  5.2n 5  15n 5  15.2n 0  120n 0)
+
+.control
+set wr_vecnames
+set wr_singlescale
+* Figure 1: Rs sweep, decoupling removed
+foreach rs 1 4.7 10 22 47
+  alter Rs = $rs
+  tran 0.02n 120n
+  wrdata sweep_$rs v(node)
+end
+* Figure 2: decoupling removed vs present, Rs = 10
+alter Rs = 10
+alter Cdec = 0
+tran 0.02n 120n
+wrdata dec_removed v(node)
+alter Cdec = 100n
+tran 0.02n 120n
+wrdata dec_present v(node)
+.endc
+.end
