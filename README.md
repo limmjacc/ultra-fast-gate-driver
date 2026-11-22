@@ -22,8 +22,11 @@ design, and open items.
 
 ## Status
 
-Concept and electrical analysis stage. No schematic, PCB layout, or
-simulation exists yet, and the target IC's part number is not yet known (see
-[docs/open-items.md](docs/open-items.md)). This design is a starting point
-and requires review and validation by a qualified engineer before use,
+Early design stage. A first-pass schematic exists (vendored driver and
+MOSFET parts, 114 of 116 ERC issues resolved, one benign item left
+documented); no PCB layout or SPICE simulation exists yet (see
+[docs/open-items.md](docs/open-items.md)). The target IC is identified as the
+CY8C4125LQI-S425 (PSoC 4100S, Cortex-M0+, 24 MHz max). This design is a
+starting point and requires review and validation by a qualified engineer
+before use,
 including before testing against any real target IC.
