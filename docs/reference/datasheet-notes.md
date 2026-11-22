@@ -1,7 +1,7 @@
 # Datasheet notes
 
 Figures below were read directly from the PDFs saved in
-`hardware/datasheets/`, not from search summaries — see
+`hardware/datasheets/`, not from search summaries - see
 [data-reliability.md](data-reliability.md) for why that distinction matters.
 Items marked **Estimate** are derived in this project, not stated by a
 manufacturer.
@@ -16,7 +16,7 @@ manufacturer.
 | diodes-bss138-datasheet.pdf | DS30144 Rev. 25-2, June 2024 (superseded selection) |
 | ti-am335x-datasheet.pdf | SPRS717L, March 2020 (BeagleBone Black processor) |
 | beagleboard-beaglebone-black-manual.pdf | BeagleBoard.org manual, 2026-06-04 |
-| infineon-cy8c41x5-psoc-4100ps-datasheet.pdf | Document 002-22097 Rev. *F, 2023-11-16 (sibling family, read before the exact part was confirmed — see note below) |
+| infineon-cy8c41x5-psoc-4100ps-datasheet.pdf | Document 002-22097 Rev. *F, 2023-11-16 (sibling family, read before the exact part was confirmed - see note below) |
 | infineon-cy8c4125-psoc-4100s-datasheet.pdf | Document 002-00122 Rev. *K, April 2018 (**target IC's actual family, confirmed 2026-11-01**) |
 
 ## TI LMG1025-Q1 (selected driver)
@@ -34,7 +34,7 @@ manufacturer.
   100 pF load. Rise/fall time 650 ps / 850 ps into a 220 pF load. Minimum
   input pulse width that changes the output state: 1.25 ns.
 - **Supply current:** 75 µA quiescent; 40 mA (no load) to 51 mA (100 pF load)
-  at 30 MHz switching — the datasheet does not characterize higher
+  at 30 MHz switching - the datasheet does not characterize higher
   frequencies and recommends burst operation for very high repetition rates
   (section 7.2.2.4).
 - **Layout requirements (section 9.1):** a four-layer or higher board;
@@ -42,7 +42,7 @@ manufacturer.
   place the driver as close to the FET as possible with OUTH/OUTL resistors
   immediately at the gate; source return on layer 2 directly beneath the
   driver and FET; bypass capacitor (0.1–1 µF, X7R or better) on the top layer
-  immediately adjacent to VDD, plus an additional 1 µF nearby — TI's own
+  immediately adjacent to VDD, plus an additional 1 µF nearby - TI's own
   example uses a 0.1 µF 0402 plus a 1 µF 0603.
 - **Narrow-pulse generation (section 7.2.2.2):** the two-input AND structure
   can generate a pulse of width equal to the delay between IN+ and a delayed
@@ -68,7 +68,7 @@ Rejected for now on hand-assembly difficulty; see
   point.
 - **Gate charge:** Qgs 0.55 nC, Qgd 0.58 nC, total Qg 1.7 nC typical at
   VDD = 10 V, ID = 2.3 A, VGS 0 to 2.5 V. Plateau voltage 1.5 V.
-- **Switching (at VDD = 10 V, VGS = 2.5 V, ID = 2.3 A, RG = 6 Ω — not this
+- **Switching (at VDD = 10 V, VGS = 2.5 V, ID = 2.3 A, RG = 6 Ω - not this
   circuit's conditions):** turn-on delay 7.5 ns, rise 9.9 ns, turn-off delay
   12.0 ns, fall 3.7 ns. These do not apply directly to the crowbar circuit's
   actual drive and load conditions.
@@ -77,7 +77,7 @@ Rejected for now on hand-assembly difficulty; see
 ## Infineon BSS138N / BSS138W, Diodes BSS138-7-F (superseded)
 
 These were selected under the earlier resistive-gate-load model (471 Ω
-equivalent load at 7 mA) before the crowbar application was known — see
+equivalent load at 7 mA) before the crowbar application was known - see
 [../decisions/decision-log.md](../decisions/decision-log.md), entries 2–7.
 Kept here for reference since the figures remain accurate, even though the
 parts are no longer the current selection:
@@ -88,23 +88,23 @@ parts are no longer the current selection:
 - **BSS138W:** same die family in SOT-323, nearly identical figures to
   BSS138N.
 - **Diodes BSS138-7-F:** RDS(on) ≤ 3.5 Ω at VGS 10 V (no 4.5 V figure
-  stated); COSS ≤ 25 pF maximum at VDS 10 V (no typical value given — the
+  stated); COSS ≤ 25 pF maximum at VDS 10 V (no typical value given - the
   dynamic figures in this datasheet are stated as "guaranteed by design," not
   measured).
 
 ## TI AM3358 (BeagleBone Black processor) and the BeagleBone Black manual
 
 See [../design/05-host-interface.md](../design/05-host-interface.md) for the
-extracted logic-level, rail, and PRU timing figures — kept there rather than
+extracted logic-level, rail, and PRU timing figures - kept there rather than
 duplicated here since they are discussed alongside their consequences for
 this design.
 
-## Infineon CY8C4125LQI-S425 (target IC) — PSoC 4100S, confirmed
+## Infineon CY8C4125LQI-S425 (target IC) - PSoC 4100S, confirmed
 
 **The full part number was confirmed 2026-11-01** from a photograph of the
 physical chip marking: CY8C4125LQI-S425, PSoC 4100S family, QFN package,
 Industrial temperature range, 24 MHz maximum CPU/IMO clock (correcting an
-earlier 48 MHz working assumption — see
+earlier 48 MHz working assumption - see
 [../decisions/decision-log.md](../decisions/decision-log.md), entries 11–12).
 See [../design/08-target-ic.md](../design/08-target-ic.md) for the full
 nomenclature decode.
@@ -113,24 +113,24 @@ Figures below were originally read from Infineon's PSoC 4100PS datasheet
 (002-22097 Rev. *F) before the exact family was known, then cross-checked
 directly against this chip's actual family datasheet (PSoC 4100S, document
 002-00122 Rev. *K). **Every figure below was confirmed identical between the
-two documents** — the only correction needed was the clock speed (24 MHz,
+two documents** - the only correction needed was the clock speed (24 MHz,
 confirmed, not 48 MHz).
 
 - **Architecture:** Arm Cortex-M0+, on-chip flash (32 KB) and SRAM (4 KB),
   internal 1.8 V core regulator. Not a fixed-function analog/power IC.
-- **Power pins:** VDDD (digital supply — the pin this fixture crowbars), VDDA
+- **Power pins:** VDDD (digital supply - the pin this fixture crowbars), VDDA
   (analog supply, **must be shorted to VDDD on the PCB** per the datasheet),
   VCCD (internal 1.8 V regulator output that actually feeds the digital
   core, separate from VDDD, with its own bypass capacitor).
-- **Supply modes:** Mode 1 (this design's case) — 1.8–5.5 V external supply
-  at VDDD/VDDA with the internal regulator deriving VCCD. Mode 2 — 1.71–1.89 V
+- **Supply modes:** Mode 1 (this design's case) - 1.8–5.5 V external supply
+  at VDDD/VDDA with the internal regulator deriving VCCD. Mode 2 - 1.71–1.89 V
   external supply with VDDD and VCCD tied together and the regulator bypassed
   (not applicable at this design's 3.3 V).
 - **Datasheet-recommended decoupling (Mode 1):** 1 µF in parallel with 0.1 µF
   (X5R ceramic or better) on each of VDDD and VDDA; 0.1 µF (X5R or better) on
   VCCD, stated as not to be connected to anything else. All of this is what
   the project owner's decision to remove decoupling eliminates for this test
-  — see [../design/08-target-ic.md](../design/08-target-ic.md) for why VCCD's
+  - see [../design/08-target-ic.md](../design/08-target-ic.md) for why VCCD's
   capacitor in particular (not on the crowbarred pin) is worth a separate
   look.
 - **Absolute maximum ratings:** VDDD/VDDA −0.5 V to 6 V relative to VSS; VCCD

@@ -1,6 +1,6 @@
 # Fabrication outputs
 
-Generated manufacturing exports from the KiCad project — Gerbers, drill
+Generated manufacturing exports from the KiCad project - Gerbers, drill
 files (Excellon), pick-and-place / position files, and BOM exports.
 
 Nothing in this folder is hand-edited. Regenerate from

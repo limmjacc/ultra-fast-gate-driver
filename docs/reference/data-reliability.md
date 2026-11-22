@@ -12,15 +12,15 @@ Every electrical figure in
 read from the actual manufacturer PDF, saved in `hardware/datasheets/`, not
 from a search summary. These are as reliable as the datasheet itself (subject
 to the normal caveats: typical vs. maximum figures, test conditions that may
-not match this circuit, and revision currency — each checked and noted where
+not match this circuit, and revision currency - each checked and noted where
 it matters, for example BSS806N's switching-time figures being measured
 under conditions this circuit does not use).
 
 ## Derived in this project (marked **Estimate**)
 
-Anything computed from datasheet figures — the COSS de-rating in
+Anything computed from datasheet figures - the COSS de-rating in
 [../design/04-timing-and-recovery.md](../design/04-timing-and-recovery.md),
-the drain-edge and recovery-time tables, the LED resistor value — is marked
+the drain-edge and recovery-time tables, the LED resistor value - is marked
 **Estimate** wherever it appears. These are first-order, often single-pole,
 lumped-element calculations with stated assumptions. Treat them as planning
 figures to validate by simulation and measurement, not as specifications.
@@ -46,5 +46,5 @@ requiring this approach). Two concrete reasons this matters:
 
 **Every stock figure, price, and any other figure sourced this way is marked
 as such where it appears, and should be re-confirmed in a browser before
-being acted on** — particularly before ordering parts or committing a board
+being acted on** - particularly before ordering parts or committing a board
 layout to a specific footprint.

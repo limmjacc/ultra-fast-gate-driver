@@ -5,62 +5,61 @@ arrived at, including requirements that were stated and then superseded.
 
 ## Purpose
 
-Pull a target IC's 3V3 supply input down to ground for a controlled,
-nanosecond-scale duration, then release it back to 3V3, to test the IC's
-tolerance to brief supply transients. See
+Pull a target board's supply rail down to ground for a controlled,
+nanosecond-scale duration, then release it, to study how a microcontroller
+responds to brief supply glitches. The fixture is general-purpose: it is meant
+for old, dead, or scrap microcontroller boards found during hobby
+reverse-engineering, not for one specific part. See
 [design/06-safety-and-protection.md](design/06-safety-and-protection.md) for
-what this does and does not test (it is not a lightning-surge test).
+what this does and does not test (it is not a surge-immunity test).
 
 ## Fixed
 
-- **Trigger input:** from a BeagleBone Black, 3V3 logic, active high.
-- **Target rail:** 3V3 maximum anywhere in the system; no hazardous voltages.
-- **Grounding:** the BeagleBone, this board, and the target IC's board share
-  one logic ground. No isolation required — see
+- **Trigger input:** from a BeagleBone Black PRU, 3V3 logic, active high. The
+  PRU gives a deterministic, low-jitter edge; see
+  [design/05-host-interface.md](design/05-host-interface.md).
+- **Target rail voltage:** up to 5.5 V, covering 1.8, 2.5, 3.3, and 5 V
+  parts. Rs power ratings and protection are sized for the 5.5 V worst case;
+  see [design/04-timing-and-recovery.md](design/04-timing-and-recovery.md) and
+  [design/06-safety-and-protection.md](design/06-safety-and-protection.md).
+- **Injection:** the fixture crowbars the target's own live rail. The FET and
+  a series resistor Rs clip or solder with short leads onto the target rail.
+  An optional self-supply footprint lets the fixture source the rail instead,
+  when wanted. See [design/01-topology.md](design/01-topology.md).
+- **Grounding:** the BeagleBone, this board, and the target board share one
+  logic ground. No isolation required; see
   [reference/isolation-analysis.md](reference/isolation-analysis.md).
-- **Target decoupling:** removed for this test, by the project owner's
-  decision, to keep the target node's RC time constant small. See
+- **Node capacitance:** kept small by working at the target's own supply pin
+  and desoldering the local decoupling there, so the node is a few millimetres
+  of copper plus the FET output capacitance. See
   [design/04-timing-and-recovery.md](design/04-timing-and-recovery.md).
-- **Glitch width goal:** sub-20 ns is the ideal, as low as achievable. See
-  [design/04-timing-and-recovery.md](design/04-timing-and-recovery.md) for
-  the achievable range under the current design.
-- **Glitch pulse generation:** the LMG1025-Q1 driver's delayed-AND method
-  (IN+ / IN-), with parallel, solder-selectable footprints for the delay
-  element and for the series resistor (Rs), so both can be tuned on the
-  bench. See [design/02-pulse-generation.md](design/02-pulse-generation.md)
-  and [design/04-timing-and-recovery.md](design/04-timing-and-recovery.md).
-- **Board supply:** 5 V, from the BeagleBone's own rail.
-- **Power-present indicator:** an SMD LED; any part is acceptable.
-- **Target load current (superseded context):** an earlier resistive-load
-  model assumed 7 mA at 3.3 V; this no longer applies under the crowbar
-  topology but is kept in the decision log for history.
-- **Supply current capacity:** not a hard constraint — a higher-current,
-  current-limited bench supply can be used if needed. See
-  [design/06-safety-and-protection.md](design/06-safety-and-protection.md)
-  for why the current limit still needs to be chosen deliberately.
+- **Glitch width:** short and tunable. Set by the driver's delayed-AND method
+  with a solder-selectable RC delay, down to the driver's own minimum pulse
+  width. See [design/02-pulse-generation.md](design/02-pulse-generation.md).
+- **Pulse generation:** a logic buffer squares the PRU edge and feeds the
+  driver's IN+ and a delayed IN-. See
+  [design/02-pulse-generation.md](design/02-pulse-generation.md).
+- **Max on-time protection:** an independent hardware one-shot limits how long
+  the FET can be on, regardless of the trigger or the delay logic. See
+  [design/06-safety-and-protection.md](design/06-safety-and-protection.md).
+- **Board supply:** 5 V for the driver and 3V3 for the logic, both from the
+  BeagleBone.
+- **Rs bank:** solder-selectable 1, 4.7, 10, 22, 47 ohm, one populated at a
+  time, each footprint rated for its stuck-on power at 5.5 V.
+- **Power-present indicator:** an SMD LED.
+- **Test points:** on the trigger, IN+, IN-, gate, and target node, for scope
+  access with a short ground return.
 
-## Target IC: CY8C4125LQI-S425 (Infineon PSoC 4100S)
-
-**Confirmed 2026-11-01** from the physical chip's top marking: Infineon PSoC
-4100S family, QFN package, Industrial temperature range, **24 MHz** maximum
-CPU/IMO clock (not 48 MHz — correcting an earlier working assumption from
-before the crowbar topology was adopted). It is an Arm Cortex-M0+
-microcontroller with on-chip flash, not a fixed-function IC. VDDD and VDDA
-are confirmed physically interrupted together on this board. See
-[design/08-target-ic.md](design/08-target-ic.md) for the full analysis,
-including why the chip's own internal regulator (between the crowbarred pin
-and the digital core) may filter very short glitches.
-
-## Open (blocking final part/footprint values)
+## Open
 
 | Parameter | Status |
 |---|---|
-| Target IC's real input/supply capacitance (VDDD + VDDA, shorted together) | Unknown; estimated from the FET's own COSS in the meantime (see [design/04-timing-and-recovery.md](design/04-timing-and-recovery.md)) |
-| Whether VCCD's separate internal-regulator decoupling also needs addressing | Open — VCCD is not on the crowbarred pin, but may filter the glitch before it reaches the digital core; see [design/08-target-ic.md](design/08-target-ic.md) |
-| Glitch depth/duration sweep design | Agreed as the right test approach; the project owner is designing this separately from the board hardware |
-| Rs footprint value set | Planned as parallel footprints (4.7 Ω / 10 Ω / 22 Ω / 33 Ω candidates); final values pending the sweep design above |
-| Bench supply current limit | Not yet chosen; see [design/06-safety-and-protection.md](design/06-safety-and-protection.md) |
-| Form factor and connectors | Not yet specified |
-| Number of channels | Assumed one |
+| Target rail's real node capacitance once decoupling is removed | Estimated from the FET's COSS; depends on the specific board. Small nodes (a few mm of copper) are the design assumption |
+| Glitch depth/duration sweep | The board keeps both knobs adjustable (Rs and the delay element); the sweep test code is written separately |
+| Delay-element value set | Parallel RC footprints (roughly 2 to 50 ns span); exact values chosen per target on the bench |
+| Max on-time value | Rmt/Cmt set it; pick a value well above the intended glitch but short enough to protect Rs |
+| Bench supply current limit (self-supply mode) | Set deliberately against the stuck-on table in [design/06-safety-and-protection.md](design/06-safety-and-protection.md) |
+| Form factor and connectors | Header and pad choices pending layout |
+| Number of channels | One |
 
 See [open-items.md](open-items.md) for the full working checklist.

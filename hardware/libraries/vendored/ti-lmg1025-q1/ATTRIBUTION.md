@@ -2,7 +2,7 @@
 name: ti-lmg1025-q1-attribution
 ---
 
-# TI LMG1025-Q1 gate driver — attribution
+# TI LMG1025-Q1 gate driver - attribution
 
 - **Symbol** (`ti-lmg1025-q1.kicad_sym`): hand-drawn, original artwork (a plain
   rectangle body), with pin names and numbers taken directly from the
@@ -20,14 +20,14 @@ name: ti-lmg1025-q1-attribution
   land pattern: 2 mm × 2 mm body, 6 pins at 0.5 mm pitch, exposed pad length
   1.6 mm matches TI's drawing exactly.
   - Upstream source: <https://gitlab.com/kicad/libraries/kicad-footprints>
-  - License: CC-BY-SA 4.0 — full text at
+  - License: CC-BY-SA 4.0 - full text at
     [`license-cc-by-sa-4.0.md`](license-cc-by-sa-4.0.md).
   - **Known discrepancy, not yet resolved:** TI's own DEE0006A land pattern
     specifies the exposed pad at 0.9 mm × 1.6 mm; the closest available
     KiCad bundled footprint has a 0.7 mm × 1.6 mm pad (narrower by 0.2 mm).
     The individual signal pin pads (0.5 mm pitch, land dimensions) match
     TI's drawing. **Verify this against TI's land pattern drawing (datasheet
-    section 12, "Example Board Layout") before fabrication** — this narrower
+    section 12, "Example Board Layout") before fabrication** - this narrower
     pad is a safe (undersized, non-solder-mask-defined) direction to err in,
     but it has not been widened to match TI's exact recommendation.
 - **3D model:** none available. No bundled KiCad 3D model exists for the
@@ -49,5 +49,5 @@ for the extracted electrical figures.
 
 Ordering part: **LMG1025QDEERQ1** (WSON, DEE package, large tape and reel).
 The sibling **LMG1025QDRVRQ1** uses the DRV package (DRV0006C), which has
-different mechanical dimensions — do not substitute its footprint for this
+different mechanical dimensions - do not substitute its footprint for this
 one without re-checking the package code on the physical part.

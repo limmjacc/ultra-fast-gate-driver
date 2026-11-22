@@ -9,7 +9,7 @@ the full extracted table.
 
 The AM3358's 3.3 V I/O buffers guarantee VOH of at least VDDSHV − 0.45 V at
 4 mA, with VDDSHV specified from 3.135 V to 3.465 V. Worst case, that is
-**2.685 V**, against the LMG1025-Q1's 2.6 V maximum VIH — a margin of about
+**2.685 V**, against the LMG1025-Q1's 2.6 V maximum VIH - a margin of about
 85 mV at the datasheet's test current. The driver input only presents a
 150 kΩ pull-down, drawing a few tens of microamps, so the real output voltage
 should sit closer to the unloaded rail than the 4 mA test condition implies,
@@ -32,7 +32,7 @@ maximum versus driver 1.1 V minimum).
 ## Trigger pin selection
 
 - **Use a genuine PRU direct-output pin**, not a plain Linux GPIO, for
-  anything timing-critical — see [02-pulse-generation.md](02-pulse-generation.md)
+  anything timing-critical - see [02-pulse-generation.md](02-pulse-generation.md)
   for why.
 - **Avoid the sixteen boot-strap pins** exposed on the expansion headers; the
   manual warns these must not be driven at power-up, since doing so can
@@ -45,7 +45,7 @@ maximum versus driver 1.1 V minimum).
 The PRU's direct output mode requires each output phase to be at least two
 L3_CLK periods wide. If L3_CLK runs at 200 MHz (**unverified against the
 processor documentation**), that is a 5 ns period and a 10 ns minimum pulse
-in 5 ns steps — adequate for setting the glitch's *timing offset*, which is
+in 5 ns steps - adequate for setting the glitch's *timing offset*, which is
 what the PRU is used for in this design, but not for setting glitch *width*
 directly (see [02-pulse-generation.md](02-pulse-generation.md), which hands
 width off to an on-board delay element instead).
@@ -53,8 +53,17 @@ width off to an on-board delay element instead).
 ## Grounding
 
 The BeagleBone, this board, and the target IC's board share one logic
-ground — see [01-topology.md](01-topology.md) and
+ground - see [01-topology.md](01-topology.md) and
 [../reference/isolation-analysis.md](../reference/isolation-analysis.md).
 Tie the trigger signal ground to the FET source return at a single point near
 the FET, per the driver datasheet's ground-bounce guidance, rather than
 relying on a shared plane alone.
+
+## The input buffer resolves the VIH margin
+
+The ~85 mV worst-case margin above is why the trigger now goes through a
+74LVC2G17 Schmitt buffer (U2) before the gate driver, rather than straight from
+the PRU pin. The buffer runs at 3V3 and its output swings to the rail, so it
+clears the driver's 2.6 V VIH comfortably, and it squares the edge for the
+delayed-AND timing. The PRU still only has to set the glitch timing offset, not
+the drive level. See [02-pulse-generation.md](02-pulse-generation.md).

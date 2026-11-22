@@ -15,7 +15,7 @@ the vendored driver and FET symbols/footprints ready to use.
 ```
 hardware/
 ├── ultra-fast-gate-driver.kicad_pro  Project file
-├── ultra-fast-gate-driver.kicad_sch  Schematic — first pass, see status below
+├── ultra-fast-gate-driver.kicad_sch  Schematic - first pass, see status below
 ├── sym-lib-table                     Project-local symbol library table
 ├── fp-lib-table                      Project-local footprint library table
 ├── datasheets/       PDF datasheets for every non-passive part, kebab-case named
@@ -35,7 +35,7 @@ J1–J3 placed and wired. See
 [../docs/decisions/decision-log.md](../docs/decisions/decision-log.md) entry
 13 for how it was built and verified, and
 [../docs/open-items.md](../docs/open-items.md) items 22–28 for what's still
-open on it — notably one unresolved ERC warning near J1 best checked
+open on it - notably one unresolved ERC warning near J1 best checked
 interactively in the GUI, and the delay element and connectors, which remain
 placeholders.
 

@@ -3,7 +3,7 @@
 ## Board supply
 
 5 V, intended to come from the BeagleBone Black's own 5 V rail (VDD_5V or
-SYS_5V depending on how the BeagleBone itself is powered — see
+SYS_5V depending on how the BeagleBone itself is powered - see
 [05-host-interface.md](05-host-interface.md)) so the driver and the host come
 up and down together. The LMG1025-Q1's recommended supply range is
 4.75–5.25 V with a 5% stability recommendation from TI; **measure the
@@ -19,9 +19,17 @@ listings give a 2.4 V forward voltage for this part; the manufacturer's own
 datasheet was not retrievable at the time of selection, so this figure is
 unconfirmed (see
 [../reference/data-reliability.md](../reference/data-reliability.md)). From
-5 V at 2.4 V forward voltage, a 1.5 kΩ resistor gives roughly 1.7 mA — enough
+5 V at 2.4 V forward voltage, a 1.5 kΩ resistor gives roughly 1.7 mA - enough
 for a visible indicator, not a design-critical current.
 
 Keep the LED and its resistor off the driver's own VDD decoupling path (route
 them from the 5 V rail before it reaches the driver's local bypass
 capacitors) so the LED does not disturb the driver's supply during switching.
+
+## Logic rail: 3V3
+
+The trigger buffer (U2), the max-on-time one-shot (U3), and the AND gate (U4)
+run from 3V3, taken from the BeagleBone's 3V3 rail through the J1 tap. Keep the
+3V3 logic rail and the 5 V driver rail separately bypassed. The 3V3 rail draws
+very little (static CMOS plus switching at the trigger rate), so a local 0.1 uF
+per logic part is enough.

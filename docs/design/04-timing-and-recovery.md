@@ -10,18 +10,18 @@ real board are available (see [../open-items.md](../open-items.md)).
 ## Why removing the decoupling capacitor matters so much
 
 Before this decision, the node capacitance was assumed to include the
-target's decoupling capacitor — typically tens to hundreds of nanofarads on a
+target's decoupling capacitor - typically tens to hundreds of nanofarads on a
 real IC supply pin. With a capacitor that large, the node would have
 collapsed quickly (it only has to discharge through the FET's low
 on-resistance) but then recovered through the series resistor Rs on a
-timescale of **hundreds of nanoseconds to microseconds** — the decoupling
+timescale of **hundreds of nanoseconds to microseconds** - the decoupling
 capacitor, not the FET, the driver, or Rs, would have set the real glitch
 width, however precisely the trigger pulse was timed.
 
 Removing the decoupling capacitor for this test eliminates that bottleneck
 entirely. What is left on the node is just the FET's own output capacitance
 (COSS) plus whatever stray capacitance the board, the IC's pin, and a
-measurement probe add — on the order of 200–300 pF rather than tens of
+measurement probe add - on the order of 200–300 pF rather than tens of
 nanofarads, three orders of magnitude smaller. This is the single biggest
 lever in this design for hitting a sub-20 ns glitch.
 
@@ -59,8 +59,8 @@ into ~225 pF. That RC time constant is:
 
 This is three orders of magnitude faster than anything else in the signal
 path. **The real floor on how fast the node can be pulled down is the gate
-driver's own turn-on propagation delay** — 2.6 ns typical, 4.1 ns maximum,
-per the LMG1025-Q1 datasheet — not the RC network. This is a materially
+driver's own turn-on propagation delay** - 2.6 ns typical, 4.1 ns maximum,
+per the LMG1025-Q1 datasheet - not the RC network. This is a materially
 different (and much better) conclusion than the earlier decoupling-capacitor
 model implied, where the collapse itself was comparable in scale to the
 recovery.
@@ -94,12 +94,12 @@ With decoupling removed, **total glitch width is dominated by Rs, with the
 driver's own propagation delay (a few nanoseconds) as the practical floor**:
 
 - **Rs in the 10–33 Ω range** keeps the recovery tail between about 5 ns and
-  16 ns — comfortably under the sub-20 ns goal, with the delayed-AND method
+  16 ns - comfortably under the sub-20 ns goal, with the delayed-AND method
   ([02-pulse-generation.md](02-pulse-generation.md)) controlling the
   collapse-to-release interval independently, down to the driver's 1.25 ns
   minimum pulse width.
 - **Lower Rs** (4.7 Ω and below) gives faster recovery but sharply higher
-  crowbar current and stuck-on power — see
+  crowbar current and stuck-on power - see
   [06-safety-and-protection.md](06-safety-and-protection.md) for why that
   matters.
 - **This is a large improvement over the decoupling-capacitor case**, where
@@ -110,25 +110,40 @@ driver's own propagation delay (a few nanoseconds) as the practical floor**:
 
 Because the target IC's real input capacitance and tolerance are unknown
 until its part number is available, Rs is laid out as several parallel,
-solder-selectable footprints rather than a single fixed value — for example
+solder-selectable footprints rather than a single fixed value - for example
 4.7 Ω, 10 Ω, 22 Ω, and 33 Ω, populated one at a time with a solder jumper or
 0-ohm link. This lets the glitch width/crowbar-current trade-off be tuned on
 the bench against real measurements instead of being committed to at design
 time. Each footprint should be rated for its own stuck-on power (see the
-table above) or backed by a fuse — see
+table above) or backed by a fuse - see
 [06-safety-and-protection.md](06-safety-and-protection.md).
 
 ## Caveats
 
 - This is a first-order, single-pole lumped model. It ignores board and gate
-  loop inductance, which will round off edges and can introduce ringing —
+  loop inductance, which will round off edges and can introduce ringing -
   real performance will be slower and noisier than this model predicts,
   especially at the lower Rs values where current changes quickly.
 - The COSS de-rating formula is a standard approximation, not a
   manufacturer-specified figure at 3.3 V; treat the ~225 pF node capacitance
   as a planning estimate until measured on a real board.
 - None of this accounts for the target IC's own input capacitance or
-  on-board bypassing other than its (now-removed) decoupling capacitor —
+  on-board bypassing other than its (now-removed) decoupling capacitor -
   unknown until the part number is known.
 - Simulate this node (SPICE, in `simulation/`) with the real board parasitics
   before ordering, and confirm with a real measurement once built.
+
+## General-purpose use: rails up to 5.5 V and small real nodes
+
+The worked numbers above use a 3.3 V rail as the baseline. This fixture now
+handles rails up to 5.5 V, which raises the crowbar current and the stuck-on
+power in proportion; see the 5.5 V table in
+[06-safety-and-protection.md](06-safety-and-protection.md). The recovery and
+collapse timescales do not change with rail voltage, since they are set by Rs
+and the node capacitance, not by the voltage.
+
+In live-rail mode the recovery is also helped by the target's own supply, which
+restores the rail once the FET releases. The ~225 pF node estimate here is still
+the FET-plus-stray floor; a real target pad with its decoupling removed is a few
+millimetres of copper plus the FET, which is in the same range. Measure the real
+node on the bench where possible, and treat the estimate as a planning figure.

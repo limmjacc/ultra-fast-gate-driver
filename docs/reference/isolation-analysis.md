@@ -16,7 +16,7 @@ host's ground, and no hazardous voltage appears anywhere in the system.
    published datasheets: ADuM110N up to 13 ns maximum; Si8610 5–13 ns;
    ISO7721 11 ns typical / 17 ns maximum, with several ns of additional skew.
    The LMG1025-Q1's own propagation delay is 2.6–2.9 ns typical, and the
-   target edge/glitch timing is in the same range — an isolator would add
+   target edge/glitch timing is in the same range - an isolator would add
    more delay than the entire target.
 3. **Isolation needs an isolated supply** for the driver side and adds board
    area and a second ground domain, working against the compact, low-
@@ -34,7 +34,7 @@ host's ground, and no hazardous voltage appears anywhere in the system.
   series resistor at the input. The driver's IN+ pull-down keeps the gate off
   if the pin floats.
 - **Boot pins.** Do not use a BeagleBone pin that is driven at boot as the
-  trigger — see [../design/05-host-interface.md](../design/05-host-interface.md).
+  trigger - see [../design/05-host-interface.md](../design/05-host-interface.md).
 
 ## When isolation would become necessary
 

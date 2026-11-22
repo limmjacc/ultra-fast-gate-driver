@@ -1,32 +1,43 @@
 # ultra-fast-gate-driver
 
-A nanosecond-scale supply-rail crowbar test fixture (KiCad). Triggered by a
-BeagleBone Black over a shared 3V3 logic ground, it pulls a target IC's 3V3
-supply input to ground and releases it, for a controlled, very short
-duration, to test the IC's tolerance to brief supply transients.
+A nanosecond-scale supply-rail crowbar fault-injection fixture (KiCad). A
+BeagleBone Black PRU triggers a fast gate driver and a MOSFET that briefly
+short a target board's supply rail to ground and release it, for a controlled
+few-nanosecond window, to study how an old or scrap microcontroller behaves
+when its supply is glitched.
 
-This started as a general-purpose ultra-fast gate driver board and was
-reframed into its current, more specific purpose partway through design —
-see [docs/decisions/decision-log.md](docs/decisions/decision-log.md) for the
-full history. **Start at [docs/README.md](docs/README.md)** for requirements,
-design, and open items.
+It is a general-purpose bench tool for hobby reverse-engineering and learning,
+not tied to one target. It works on any small microcontroller board with a
+supply rail up to 5.5 V, clipped or soldered onto with short leads. It is not
+a general-purpose gate driver board and not a surge-immunity test fixture; see
+[docs/design/06-safety-and-protection.md](docs/design/06-safety-and-protection.md)
+for the scope note. **Start at [docs/README.md](docs/README.md)** for
+requirements, design, and open items.
 
 ## Layout
 
 ```
 .
-├── hardware/     KiCad project — schematic, PCB layout, libraries, datasheets
-├── simulation/   SPICE models and results (switching time, gate loop, ringing)
-└── docs/         Design documentation — see docs/README.md
+├── hardware/     KiCad project: schematic, PCB layout, libraries, datasheets
+├── simulation/   SPICE model and results for the crowbar node
+└── docs/         Design documentation, see docs/README.md
 ```
+
+## What it does
+
+The PRU trigger is squared by a logic buffer, split into a direct path and an
+RC-delayed path, and fed to the gate driver's two inputs so the output is a
+pulse whose width equals the delay (the driver's own delayed-AND method). The
+driver switches a low-resistance MOSFET that crowbars the target rail through
+a small series resistor Rs. A separate hardware one-shot sets a maximum
+on-time so the FET cannot be held on by a stuck trigger or a logic fault. The
+target's own decoupling is removed near the injection point to keep the node
+capacitance small, so the glitch can be short and sharp.
 
 ## Status
 
-Early design stage. A first-pass schematic exists (vendored driver and
-MOSFET parts, 114 of 116 ERC issues resolved, one benign item left
-documented); no PCB layout or SPICE simulation exists yet (see
-[docs/open-items.md](docs/open-items.md)). The target IC is identified as the
-CY8C4125LQI-S425 (PSoC 4100S, Cortex-M0+, 24 MHz max). This design is a
-starting point and requires review and validation by a qualified engineer
-before use,
-including before testing against any real target IC.
+Early design stage. The schematic is complete and passes ERC with no
+violations. No PCB layout exists yet, and the board has not been built or
+tested. The SPICE model of the crowbar node is in `simulation/`. This design
+is a starting point and needs review and validation by a qualified engineer
+before it is built or used against any real board.

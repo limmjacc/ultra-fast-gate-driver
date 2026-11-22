@@ -2,7 +2,7 @@
 
 A chronological, structured record of how this project's design arrived at
 its current shape. Each entry is what was decided, why, and what it
-superseded. This is a design history, not a schematic — see
+superseded. This is a design history, not a schematic - see
 [../design/README.md](../design/README.md) for the current circuit, and
 [../open-items.md](../open-items.md) for what is still unresolved.
 
@@ -14,7 +14,7 @@ notes and estimates, several explicitly marked as such, not a finished
 or reviewed design. The board itself is a bench test fixture: it
 intentionally injects electrical faults into another board to see how that
 board responds, so it carries real risk of damaging the target chip or the
-fixture itself if built and used carelessly — treat the safety notes
+fixture itself if built and used carelessly - treat the safety notes
 throughout this project as practical lab precautions, not a formal safety
 case.
 
@@ -40,11 +40,11 @@ parts.
 **Why:** the driver's datasheet shows propagation delay and edge times far
 inside a 5 ns budget, and 3V3-logic compatibility (checked later, see entry
 4) was plausible from search summaries. No through-hole part was found that
-could meet nanosecond switching — lead inductance rules it out — so the
+could meet nanosecond switching - lead inductance rules it out - so the
 design went SMD-only from this point on.
 
 **Superseded by:** entry 7 (the gate-drive load model changed once the real
-application — a crowbar, not a gate load — was known).
+application - a crowbar, not a gate load - was known).
 
 ## 3. Load defined: 3V3 drain, 7 mA, through-hole preference
 
@@ -61,7 +61,7 @@ entry 8.
 **Decided:** downloaded and read the TI and Infineon datasheets directly
 (saved to `hardware/datasheets/`) rather than relying on search summaries.
 Confirmed the LMG1025-Q1 accepts a 3.3 V logic input, with VIH at 2.6 V
-maximum — meaning the host GPIO must guarantee at least 2.6 V under load, a
+maximum - meaning the host GPIO must guarantee at least 2.6 V under load, a
 real but narrow margin. Confirmed the BSS138N switches the stated 7 mA load
 with ample margin. Estimated the drain edge (using the FET's COSS against the
 471 Ω equivalent load) at roughly 13 ns, missing the original 5 ns goal,
@@ -84,8 +84,8 @@ Substituted the Diodes BSS138-7-F (same SOT-23 footprint, in stock) for a
 first build, while flagging that its datasheet gives only maximum
 capacitance figures, which makes the drain-edge estimate weaker.
 
-**Why:** a part that cannot be bought is not a selection. This pattern — pick
-a part on datasheet merit, then verify it is actually orderable — repeats at
+**Why:** a part that cannot be bought is not a selection. This pattern - pick
+a part on datasheet merit, then verify it is actually orderable - repeats at
 every part decision in this project; see
 [../reference/sourcing.md](../reference/sourcing.md) for the current
 consolidated stock table.
@@ -112,7 +112,7 @@ voltage, or a long inter-chassis cable).
 
 **Decided:** the actual application is to pull a 3V3 supply input on a target
 IC down to ground and release it, for nanoseconds at a time, to test the IC's
-transient/glitch tolerance — not to drive a resistive gate load at all. This
+transient/glitch tolerance - not to drive a resistive gate load at all. This
 changed which FET properties matter (low RDS(on) and low gate charge, not
 drain-edge speed into a fixed resistor) and introduced a new element: a
 series resistor (Rs) between the 3V3 supply and the target node, through
@@ -144,7 +144,7 @@ against the processor documentation).
 
 **Why superseded:** entry 7 clarified that 48 MHz is the target IC's own
 operating clock, relevant only to how finely the crowbar's timing should be
-resolved relative to that clock — not something the FET itself needs to
+resolved relative to that clock - not something the FET itself needs to
 toggle at. The BeagleBone PRU timing finding is still useful and carried
 forward into
 [../design/05-host-interface.md](../design/05-host-interface.md).
@@ -158,7 +158,7 @@ higher-current, current-limited bench supply if needed.
 
 **Finding:** with a *typical* decoupling capacitor left on the target's
 supply pin (estimated 100 nF), the node collapses quickly but then recovers
-through Rs on a timescale of hundreds of nanoseconds to microseconds — the
+through Rs on a timescale of hundreds of nanoseconds to microseconds - the
 decoupling capacitor, not the FET or the series resistor, would have set the
 real glitch width, regardless of how precisely the trigger pulse was timed.
 
@@ -171,7 +171,7 @@ the part of the design the next entry makes adjustable.
 
 **Superseded by:** entry 10 (the project owner chose to remove the
 decoupling capacitor entirely rather than work around it, which changes the
-numbers in this entry substantially — for the better).
+numbers in this entry substantially - for the better).
 
 ## 10. Decoupling removed; parallel footprints for flexibility; delayed-AND adopted
 
@@ -194,14 +194,14 @@ numbers in this entry substantially — for the better).
 
 **Why this is better than entry 9's plan:** without a decoupling capacitor,
 the node capacitance the FET has to pull down is just the FET's own output
-capacitance plus stray board and pin capacitance — on the order of 200–300 pF,
+capacitance plus stray board and pin capacitance - on the order of 200–300 pF,
 not the 1–100 nF range a typical decoupling capacitor would add. Recomputing
 with that smaller, de-rated capacitance (the FET's COSS is specified at 10 V
 in its datasheet and is meaningfully higher at the circuit's actual 3.3 V,
 since output capacitance rises as drain voltage falls) gives:
 
 - **Collapse (turn-on):** the RC time constant through the FET's ~57 mΩ
-  on-resistance into ~225 pF is on the order of tens of *picoseconds* —
+  on-resistance into ~225 pF is on the order of tens of *picoseconds* -
   negligible. The real floor on how fast the node can be pulled down is the
   gate driver's own turn-on propagation delay (2.6 ns typical, 4.1 ns
   maximum), not the RC network.
@@ -212,25 +212,25 @@ since output capacitance rises as drain voltage falls) gives:
   for the full table and the reasoning behind picking a default Rs.
 
 This means the sub-20 ns goal is achievable with real margin using Rs values
-in the 10–33 Ω range, once decoupling is out of the picture — a materially
+in the 10–33 Ω range, once decoupling is out of the picture - a materially
 better result than entry 9's microsecond-scale recovery estimate. The
 driver's own propagation delay (a few ns) is now the practical floor on
 glitch width, not the RC network.
 
 **What remains open:** the target IC's part number, its real input
-capacitance and supply tolerance (both unknown without it — see
+capacitance and supply tolerance (both unknown without it - see
 [../design/04-timing-and-recovery.md](../design/04-timing-and-recovery.md)
 for why the ~225 pF figure is an estimate built on the FET's own
 capacitance, not a measurement of the real target), and whether the IC can
 tolerate having its decoupling removed at all. These are tracked in
 [../open-items.md](../open-items.md).
 
-## 11. Target IC identified as CY8C4125 — an Infineon PSoC 4 MCU, with a part-number ambiguity
+## 11. Target IC identified as CY8C4125 - an Infineon PSoC 4 MCU, with a part-number ambiguity
 
 **Decided:** the project owner gave the target IC's part number: CY8C4125.
 
 **Finding:** this is not a simple fixed-function "control IC" as assumed
-earlier — it is an Infineon PSoC 4 series microcontroller (Arm Cortex-M0+,
+earlier - it is an Infineon PSoC 4 series microcontroller (Arm Cortex-M0+,
 on-chip flash, SRAM, and an internal 1.8 V core regulator). Reading
 Infineon's own PSoC 4100PS datasheet (002-22097 Rev. *F, the closest direct
 match for this base part number) directly rather than relying on search
@@ -238,20 +238,20 @@ summaries, two things stood out:
 
 1. **"CY8C4125" alone does not specify one device.** The same base number is
    used across at least three different PSoC 4 sub-families (4100, 4100S,
-   4100PS) with different maximum clock speeds for the same digits — notably,
+   4100PS) with different maximum clock speeds for the same digits - notably,
    Infineon's own 4100PS ordering table shows CY8C4125 variants as the
    **24 MHz** speed grade *in that family*, while a distributor lists a
    CY8C4125 variant in the *4100S* family at 48 MHz. The earlier
    48 MHz figure given for the target IC (back when it was only "a typical
    control IC from Infineon," entry 9) cannot be confirmed from the bare part
-   number "CY8C4125" — the full ordering code is needed. See
+   number "CY8C4125" - the full ordering code is needed. See
    [../design/08-target-ic.md](../design/08-target-ic.md) for the full
    nomenclature breakdown and what to check on the physical part.
 2. **The pin this fixture crowbars (VDDD) is not what directly powers the
    digital core.** The chip has its own internal 1.8 V regulator between
    VDDD and the core logic (VCCD), with its own separate bypass capacitor.
    This means a very short VDDD glitch may be partially or fully filtered
-   before it reaches the logic the test is trying to disturb — a mechanism
+   before it reaches the logic the test is trying to disturb - a mechanism
    this project's analysis had not previously needed to consider, because the
    earlier generic "control IC" assumption treated the crowbarred pin as
    feeding the sensitive logic directly.
@@ -267,7 +267,7 @@ glitch.
 **Not yet resolved at the time:** the exact full ordering code (which
 determines the real maximum clock, package, and confirms the
 family-specific figures above), and whether VCCD's separate decoupling
-should also be addressed. The first was resolved immediately afterward — see
+should also be addressed. The first was resolved immediately afterward - see
 entry 12. The second remains tracked in [../open-items.md](../open-items.md).
 
 ## 12. Full part number confirmed from the physical chip: CY8C4125LQI-S425, 24 MHz, PSoC 4100S
@@ -286,13 +286,13 @@ crowbar topology was adopted (entries 8–9 assumed the target ran at 48 MHz).
 Cross-checking the PSoC 4100S datasheet against the PSoC 4100PS datasheet
 used in entry 11 shows the power system, decoupling recommendations,
 absolute maximum ratings, and POR/BOD thresholds are identical figures in
-both documents — so that electrical analysis stands confirmed, now against
+both documents - so that electrical analysis stands confirmed, now against
 the chip's actual family rather than a plausible sibling.
 
 **Also decided:** the project owner confirmed VDDD and VDDA are physically
 interrupted together on the board (matching this design's existing
-assumption), and agreed that a glitch depth/duration sweep — not a single
-fixed glitch width — is the right test approach, to be designed separately
+assumption), and agreed that a glitch depth/duration sweep - not a single
+fixed glitch width - is the right test approach, to be designed separately
 from this board's hardware.
 
 **Full detail:** [../design/08-target-ic.md](../design/08-target-ic.md),
@@ -301,8 +301,8 @@ analysis.
 
 ## 13. KiCad project and first-pass schematic built
 
-**Decided:** populate the actual KiCad project — library tables, vendored
-parts, and a first-pass schematic — rather than leave the design as
+**Decided:** populate the actual KiCad project - library tables, vendored
+parts, and a first-pass schematic - rather than leave the design as
 documentation only. `hardware/ultra-fast-gate-driver.kicad_pro`,
 `sym-lib-table`, `fp-lib-table`, and `ultra-fast-gate-driver.kicad_sch` now
 exist, with U1 (LMG1025-Q1), Q1 (BSS806N), the gate resistors, VDD bypass
@@ -314,21 +314,21 @@ wired.
 library format stores pin coordinates in a Y-up convention (matching how the
 symbol *library editor* displays them), but the schematic *sheet* is Y-down.
 Placing a symbol on a sheet negates the pin's local Y before applying the
-instance's own rotation — confirmed by testing the real, unmodified
+instance's own rotation - confirmed by testing the real, unmodified
 `Transistor_FET:Q_NMOS_GSD` symbol from KiCad's own bundled library, which
 showed the identical transform. This matters for this project specifically
 because [ti-lmg1025-q1](../../hardware/libraries/vendored/ti-lmg1025-q1/) and
 [infineon-bss806n](../../hardware/libraries/vendored/infineon-bss806n/) are
 hand-placed (not drawn through the KiCad GUI, which would apply this
-transform automatically and invisibly) — any future hand-authored placement
+transform automatically and invisibly) - any future hand-authored placement
 math for these parts, or new vendored parts added the same way, needs to
 apply this same Y-negation.
 
 **Verification approach, given the file was built programmatically rather
 than drawn in the GUI:** `kicad-cli sch export svg`, rendered and visually
 inspected pin-by-pin (not just via `kicad-cli sch erc`'s text output, which
-was found to report pin positions inconsistently with the actual rendered —
-and electrically real — geometry in at least one case during this process;
+was found to report pin positions inconsistently with the actual rendered -
+and electrically real - geometry in at least one case during this process;
 treat its coordinates as a rough locator, not ground truth, and confirm
 anything it flags against the rendered image or the live GUI). This caught
 and fixed several real issues beyond the coordinate convention itself:
@@ -338,8 +338,70 @@ offsets.
 
 **What's left open on the schematic itself:** one ERC warning
 (`multiple_net_names`, TRIG/+5V near J1) that direct file inspection could
-not explain and that removing the related PWR_FLAGs did not clear — flagged
+not explain and that removing the related PWR_FLAGs did not clear - flagged
 in [../open-items.md](../open-items.md) item 23 for a quick interactive check
 in the GUI rather than further blind editing. The delay element (R5) and all
 three connectors (J1–J3) remain placeholders pending the decisions tracked
 elsewhere in the open items list.
+
+## 14. Generalized to a general-purpose crowbar fixture
+
+**Decided (current design baseline):** this is no longer a CY8C4125-specific
+fixture. It is a general-purpose supply-rail crowbar for glitch fault injection
+on any old or scrap microcontroller board found during hobby
+reverse-engineering, with target rails up to 5.5 V. The CY8C4125 becomes one
+worked example target rather than the sole target.
+
+**Also decided:**
+- **Target voltage range up to 5.5 V**, covering 1.8, 2.5, 3.3, and 5 V parts.
+  Rs power ratings and protection are sized for the 5.5 V worst case.
+- **Crowbar the target's own live rail** by default: the FET and series Rs clip
+  or solder with short leads onto the live rail, which the target powers and
+  restores. An optional self-supply footprint (J2 plus a DNP series jumper)
+  lets a bench supply source the rail when the target is not powered.
+- **Small nodes:** injection is at the target's supply pin with the local
+  decoupling desoldered, so the node is a few millimetres of copper plus the FET
+  and probe. This keeps the node capacitance small without relying on one
+  specific target's numbers.
+
+**Why:** the project owner uses this for reading code off dead hardware, where
+targets vary. Most such microcontrollers run well under the speeds that would
+need sub-5 ns resolution, so the existing timing budget is comfortable.
+
+## 15. Trigger front end and max-on-time protection added; BOM confirmed
+
+**Decided:**
+- **Input buffer:** a 74LVC2G17 dual Schmitt buffer squares the PRU edge and
+  guarantees the driver's input-high level, removing the ~85 mV margin worry
+  from entry 4. One channel drives the direct path, the other re-squares the
+  delayed path.
+- **Max-on-time protection:** a 74LVC1G123 monostable produces a fixed allowed
+  window on each trigger edge, and a 74LVC1G08 AND gate forms IN+ as the trigger
+  ANDed with that window, so the FET is forced off at timeout regardless of the
+  trigger or delay logic. This is independent of the BeagleBone.
+- **AND, not OR.** The 8-pin 74LVC1G123 exposes only Q (no inverted output), so
+  the gating is an AND on IN+ (forcing the pulse off), not an OR on IN-. A
+  74LVC1G32 (OR) was priced by mistake and corrected to 74LVC1G08 (AND).
+
+**Stock confirmed (digikey.ca, CAD, 2026-11-22):** LMG1025QDEERQ1 22.23,
+BSS806NH6327XTSA1 0.67, SN74LVC2G17DCKR 0.36, 74LVC1G123DP,125 0.78 (8-pin
+TSSOP, not SOT-23-8), SN74LVC1G08DCKR 0.16 (SC-70-5). Full BOM in
+[../reference/sourcing.md](../reference/sourcing.md).
+
+## 16. Schematic rebuilt in a clean block layout; SPICE model built
+
+**Decided:** rebuild the schematic for the general-purpose design and lay it out
+for readability. The sheet is organised into five labeled functional blocks
+(Trigger and Pulse Shaping, Max On-Time Protection, Gate Driver, Crowbar Output,
+Power and Indicator), using power symbols and net labels instead of long wires,
+with test points on the trigger, IN+, IN-, gate, and target nodes.
+
+**Result:** the schematic passes ERC with zero violations, including the J1
+warning the earlier first-pass sheet could not resolve (entry 13). Remaining
+schematic work is cosmetic label placement, done in the KiCad GUI.
+
+**Also done:** a SPICE model of the crowbar node is in `simulation/`, to check
+the hand analysis in
+[../design/04-timing-and-recovery.md](../design/04-timing-and-recovery.md)
+(collapse driver-limited, recovery set by Rs and the small node capacitance)
+before committing to a layout.

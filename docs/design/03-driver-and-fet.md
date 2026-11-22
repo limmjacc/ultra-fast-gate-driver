@@ -23,7 +23,7 @@ in [02-pulse-generation.md](02-pulse-generation.md).
 - **5 V supply has a narrow range.** Recommended 4.75–5.25 V, absolute
   maximum 5.75 V, with TI recommending the supply be held within 5%. Measure
   the BeagleBone's 5 V rail under the driver's actual load before relying on
-  it — see [07-power-and-indicator.md](07-power-and-indicator.md).
+  it - see [07-power-and-indicator.md](07-power-and-indicator.md).
 - **Not characterized above 30 MHz continuous.** This matters for how often
   the fixture can repeat glitches, not for a single glitch's speed. TI's own
   guidance (section 7.2.2.4) is to burst rather than run continuously at high
@@ -42,7 +42,7 @@ a resistive gate-load application (see
 In a crowbar, the figures that matter are low on-resistance (to pull the node
 close to ground), low gate charge (so the driver turns it on fast), and low
 output capacitance (it adds directly to the node capacitance the recovery
-math in [04-timing-and-recovery.md](04-timing-and-recovery.md) depends on) —
+math in [04-timing-and-recovery.md](04-timing-and-recovery.md) depends on) -
 not drain-edge speed into a fixed resistive load, which was the old model.
 
 | Part | RDS(on) | Qg | COSS (datasheet condition) | VGS max | Pulsed ID |
@@ -53,14 +53,14 @@ not drain-edge speed into a fixed resistive load, which was the old model.
 BSS806N's lower gate charge means the driver turns it on faster for a given
 drive current (**Estimate**: roughly a nanosecond at the driver's rated
 current), and its output capacitance, once de-rated to the circuit's actual
-3.3 V, is comparable to IRLML2502's — see
+3.3 V, is comparable to IRLML2502's - see
 [04-timing-and-recovery.md](04-timing-and-recovery.md) for that de-rating and
 why it matters. IRLML2502's much higher pulsed-current rating is not needed
 here; the crowbar current estimated for realistic Rs values is well under 1 A
 (see the same document).
 
 **Gate voltage margin is tighter than it looks.** BSS806N's absolute maximum
-VGS is 8 V. The 5 V drive leaves 3 V of overshoot headroom — adequate, but
+VGS is 8 V. The 5 V drive leaves 3 V of overshoot headroom - adequate, but
 tighter than a part rated for ±20 V. Keep the gate loop short and tune the
 driver's OUTH series resistor to control ringing (see the layout guidance in
 [../reference/datasheet-notes.md](../reference/datasheet-notes.md)); do not
@@ -71,3 +71,29 @@ loop.
 As of the last check, BSS806N showed as active and in stock at digikey.ca,
 though that figure came from a page-summary tool and should be re-confirmed
 in a browser before ordering.
+
+## Target rail up to 5.5 V
+
+The BSS806N drain sees the target rail, up to 5.5 V in this general-purpose
+design. Its breakdown voltage (BVDSS 20 V) covers that with wide margin. What
+matters for a crowbar is still low RDS(on), low gate charge, and low output
+capacitance, as above; the higher rail only raises the crowbar current and the
+stuck-on power, which is handled by Rs sizing and the fuse in
+[06-safety-and-protection.md](06-safety-and-protection.md).
+
+## Logic parts (trigger, delay, protection)
+
+Three small logic parts shape the trigger and protect the FET; all run at 3V3
+and are chosen so their CMOS high output clears the driver's 2.6 V input
+threshold with margin:
+
+- **U2, 74LVC2G17** dual Schmitt-trigger buffer (SC-70-6). Squares the PRU edge
+  and buffers both the direct (IN+) and delayed (IN-) paths. See
+  [02-pulse-generation.md](02-pulse-generation.md).
+- **U3, 74LVC1G123** monostable (8-pin). Sets the maximum on-time window; see
+  [06-safety-and-protection.md](06-safety-and-protection.md).
+- **U4, 74LVC1G08** single AND gate (SC-70-5). Gates IN+ with the one-shot
+  window so the FET is forced off at timeout. An AND is required rather than an
+  OR because the 8-pin 74LVC1G123 exposes only Q, not an inverted output.
+
+Part numbers and stock are in [../reference/sourcing.md](../reference/sourcing.md).
