@@ -17,3 +17,8 @@ Thumbs.db
 # Editors
 .vscode/
 *.swp
+
+# VS Code Local History
+.history/
+_autosave-*
+_restore_backup*/
