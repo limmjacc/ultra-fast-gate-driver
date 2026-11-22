@@ -22,3 +22,12 @@ Thumbs.db
 .history/
 _autosave-*
 _restore_backup*/
+
+# Python
+__pycache__/
+*.pyc
+
+# PRU build output
+firmware/pru/build/
+firmware/pru/*.out
+firmware/pru/*.map
