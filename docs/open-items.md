@@ -66,9 +66,16 @@ Items resolved earlier and later superseded are in
     distributor listings were available at selection time).
 18. Scope-friendly probe pad at the target node with a short ground return
     (TP5 is placed; confirm its ground return on layout).
-19. Pick real connector part numbers for J1 (BeagleBone tap), J2 (optional
-    supply in), and the target pads; they are generic placeholders in the
-    schematic.
+19. **Done 2026-11-23:** real connector part numbers picked and verified in
+    stock on digikey.ca (J1 Sullins PRPC004SAAN-RC, J2 and JT Sullins
+    PRPC002SAAN-RC). See [reference/bom.md](reference/bom.md).
+
+24. **Done 2026-11-23:** full BOM picked and verified. Every part, including all
+    passives and connectors, is confirmed in stock on a live digikey.ca page and
+    recorded on the schematic (MPN, DigiKey PN, DigiKey link, datasheet,
+    package). See [reference/bom.md](reference/bom.md). Still re-confirm stock at
+    order time, and confirm the Wurth LED forward voltage (item 17) and the Rs
+    pulse ratings against the datasheets before first use.
 
 ## Schematic
 

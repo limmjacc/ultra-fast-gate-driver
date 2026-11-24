@@ -25,14 +25,20 @@ since both move; see [data-reliability.md](data-reliability.md).
 The resistors, fuse, diode, headers, and test points are commodity parts; pick
 exact orderable values during BOM finalisation.
 
+## Full verified BOM
+
+Every part, including all passives and connectors, is now picked, verified in
+stock on digikey.ca, and recorded on the schematic. The complete table (MPN,
+DigiKey part number, DigiKey link, datasheet, package, live stock, price) is in
+[bom.md](bom.md). The notes and alternates below are kept for background.
+
 ## Manufacturing fields in the schematic
 
-The six confirmed active parts (U1, U2, U3, U4, Q1, D1) carry `Mfr`, `MPN`,
-`Supplier`, and `Package` fields on their schematic symbols, so the exported BOM
-is orderable without re-sourcing each part by hand. The fields are hidden on the
-sheet to keep it clean. The commodity passives and connectors are deliberately
-left without an MPN because their exact value is selected per target; fill those
-in at BOM finalisation. Export the BOM from the job set (see
+Every orderable component carries `Mfr`, `MPN`, `Supplier`, `Supplier PN`
+(DigiKey part number), `DigiKey Link` (product URL), `Package`, and a populated
+`Datasheet` field. The fields are hidden on the sheet to keep it clean. Only the
+TP1 to TP5 scope points have no part (they are PCB pads). Export the BOM from
+the job set (see
 [../../hardware/fab-outputs/README.md](../../hardware/fab-outputs/README.md)).
 
 ## Notes on specific parts

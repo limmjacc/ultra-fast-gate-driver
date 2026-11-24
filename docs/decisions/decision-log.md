@@ -429,3 +429,30 @@ vendored copies of the two custom/critical parts, and an external STEP model.
 **Deferred to layout (GUI steps):** vendor the remaining commodity symbols and
 footprints into the project libraries and relink (open item 22), and extend the
 job set with the PCB outputs (open item 23).
+
+## 18. Full part selection and live DigiKey verification (2026-11-23)
+
+**Context:** tighten the design from a partial parts list into a complete,
+orderable BOM, with every part (including all passives and connectors) verified
+purchasable on digikey.ca.
+
+**Done:** picked and verified all 27 orderable components on live digikey.ca
+product pages (stock read directly from each page, not from aggregators). Wrote
+MPN, DigiKey part number, DigiKey link, datasheet, package, manufacturer, and
+supplier onto every schematic symbol, and captured the whole table in
+[../reference/bom.md](../reference/bom.md). ERC unchanged (zero errors).
+
+**Notable choices:**
+- D2/D3 node clamp: chose the ultra-low-capacitance Comchip RB751V-40 (about 2
+  pF) over the in-stock but high-capacitance (about 135 pF) Toshiba CUS10S30,
+  because the clamp loads the glitch node. The ideal low-cap Nexperia PMEG2010EA
+  was backorder-only. D3 reuses the same part as a high-side (kickback) clamp,
+  DNP, in place of the backordered SMF6.0CA TVS.
+- Several availability substitutions: 1 uF and the 4.7 ohm 0603 moved to Yageo
+  (the usual Samsung/1-percent parts were out of stock), 100 ohm to Panasonic
+  ERJ-3EKF1000V, 1 nF to a KEMET C0G. All are in stock and meet spec.
+- Timing parts (Rd 100, Cd 100 pF, Rmt 10k, Cmt 1 nF) set as sensible starting
+  values; footprints remain solder-selectable for tuning.
+
+**Not verifiable as permanent:** DigiKey stock is a snapshot; the MPN and DigiKey
+part number are the stable keys, and stock must be re-checked at order time.
