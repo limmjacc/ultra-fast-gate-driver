@@ -25,6 +25,16 @@ since both move; see [data-reliability.md](data-reliability.md).
 The resistors, fuse, diode, headers, and test points are commodity parts; pick
 exact orderable values during BOM finalisation.
 
+## Manufacturing fields in the schematic
+
+The six confirmed active parts (U1, U2, U3, U4, Q1, D1) carry `Mfr`, `MPN`,
+`Supplier`, and `Package` fields on their schematic symbols, so the exported BOM
+is orderable without re-sourcing each part by hand. The fields are hidden on the
+sheet to keep it clean. The commodity passives and connectors are deliberately
+left without an MPN because their exact value is selected per target; fill those
+in at BOM finalisation. Export the BOM from the job set (see
+[../../hardware/fab-outputs/README.md](../../hardware/fab-outputs/README.md)).
+
 ## Notes on specific parts
 
 - **U4 must be an AND (74LVC1G08), not an OR (74LVC1G32).** The max-on-time

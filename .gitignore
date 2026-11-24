@@ -31,3 +31,7 @@ __pycache__/
 firmware/pru/build/
 firmware/pru/*.out
 firmware/pru/*.map
+
+# Generated fabrication outputs (regenerate from the job set; keep the README)
+hardware/fab-outputs/*
+!hardware/fab-outputs/README.md

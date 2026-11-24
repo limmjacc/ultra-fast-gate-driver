@@ -79,6 +79,21 @@ Items resolved earlier and later superseded are in
     violations. Remaining schematic work is cosmetic label placement, done in
     the KiCad GUI.
 
+## Library and output hygiene
+
+22. Vendor the remaining standard parts into the project-local libraries. The
+    custom/critical parts (LMG1025-Q1, BSS806N) are already copied into
+    `hardware/libraries/`, but the commodity symbols (Device:R/C/D/LED/Fuse,
+    74xGxx logic, Connector_Generic, Connector:TestPoint, power symbols) and
+    their footprints still point at KiCad's global libraries. At layout time,
+    make the project self-contained and upgrade-safe with File -> Export ->
+    Symbols to New Library and Export Footprints to New Library, relink, then
+    Tools -> Update Schematic from PCB. This is a GUI step (footprint relink
+    needs the PCB), so it waits for layout.
+23. Extend the job set (`hardware/ultra-fast-gate-driver.kicad_jobset`) with the
+    PCB outputs (Gerbers, Excellon drill, position/pick-and-place, STEP) once
+    the PCB exists, so a single Run regenerates the whole fab package.
+
 ## Review
 
 21. Review the complete design, including the max-on-time circuit, Rs

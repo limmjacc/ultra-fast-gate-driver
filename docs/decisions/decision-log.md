@@ -405,3 +405,27 @@ the hand analysis in
 [../design/04-timing-and-recovery.md](../design/04-timing-and-recovery.md)
 (collapse driver-limited, recovery set by Rs and the small node capacitance)
 before committing to a layout.
+
+## 17. Adopt a shared KiCad workflow standard (2026-11-23)
+
+**Context:** collected a set of professional KiCad 10 practices (own symbol
+libraries carrying manufacturing data, project-local libraries for portability,
+vendored standard parts for upgrade-safety, design blocks, project templates,
+job sets for one-click outputs, STEP models kept external, and layout shortcuts).
+
+**Done now:**
+- Added `Mfr`, `MPN`, `Supplier`, and `Package` fields (hidden on the sheet) to
+  the six confirmed active parts (U1, U2, U3, U4, Q1, D1), so the exported BOM is
+  orderable without re-sourcing each part. ERC unchanged (zero errors). The
+  tunable passives were intentionally left without an MPN; they are selected per
+  target.
+- Added `hardware/ultra-fast-gate-driver.kicad_jobset` for one-click output
+  regeneration (schematic PDF and BOM), and git-ignored the generated
+  `hardware/fab-outputs/` contents.
+
+**Already in place from the start:** project-local libraries via `${KIPRJMOD}`,
+vendored copies of the two custom/critical parts, and an external STEP model.
+
+**Deferred to layout (GUI steps):** vendor the remaining commodity symbols and
+footprints into the project libraries and relink (open item 22), and extend the
+job set with the PCB outputs (open item 23).

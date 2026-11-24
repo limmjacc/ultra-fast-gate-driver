@@ -1,0 +1,61 @@
+{
+  "jobs": [
+    {
+      "description": "Schematic PDF",
+      "id": "b1a1c0de-0001-4000-8000-000000000001",
+      "settings": {
+        "black_and_white": false,
+        "drawing_sheet": "",
+        "hpgl_origin": 0,
+        "hpgl_pen_size": 0.5,
+        "min_pen_width": 847,
+        "output_filename": "ultra-fast-gate-driver-schematic.pdf",
+        "pdf_hierarchical_links": true,
+        "pdf_metadata": true,
+        "pdf_property_popups": true,
+        "plot_all": true,
+        "plot_drawing_sheet": true,
+        "plot_pages": [],
+        "theme": "",
+        "use_background_color": false
+      },
+      "type": "sch_export_plot_pdf"
+    },
+    {
+      "description": "BOM CSV",
+      "id": "b1a1c0de-0002-4000-8000-000000000002",
+      "settings": {
+        "fields": "Reference,Value,MPN,Mfr,Supplier,Package,Footprint,Description",
+        "labels": "Refs,Value,MPN,Manufacturer,Supplier,Package,Footprint,Description",
+        "group_by": "MPN,Value",
+        "sort_field": "Reference",
+        "sort_asc": true,
+        "filter_string": "",
+        "exclude_dnp": false,
+        "field_delimiter": ",",
+        "string_delimiter": "\"",
+        "ref_delimiter": ",",
+        "ref_range_delimiter": "-",
+        "keep_tabs": false,
+        "keep_line_breaks": false,
+        "format_preset": "",
+        "output_filename": "ultra-fast-gate-driver-bom.csv"
+      },
+      "type": "sch_export_bom"
+    }
+  ],
+  "meta": {
+    "version": 1
+  },
+  "outputs": [
+    {
+      "description": "fab-outputs folder",
+      "id": "c0ffee00-0003-4000-8000-000000000003",
+      "only": [],
+      "settings": {
+        "output_path": "fab-outputs"
+      },
+      "type": "folder"
+    }
+  ]
+}
