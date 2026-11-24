@@ -456,3 +456,12 @@ supplier onto every schematic symbol, and captured the whole table in
 
 **Not verifiable as permanent:** DigiKey stock is a snapshot; the MPN and DigiKey
 part number are the stable keys, and stock must be re-checked at order time.
+
+## 19. Numbered reference designators (2026-11-23)
+
+Renamed the mnemonic references to standard numbered ones so the sheet is fully
+annotated and the BOM lines up with the schematic: Rd->R5, Rmt->R6, Rsup->R7,
+Cd->C3, Cmt->C4, JT->J3. The Rs bank keeps its R3_1..R3_5 grouping (already
+numbered). The purpose each part served is still clear from its Value label and
+from [../reference/bom.md](../reference/bom.md). KiCad no longer reports
+annotation errors; ERC otherwise unchanged (zero errors).

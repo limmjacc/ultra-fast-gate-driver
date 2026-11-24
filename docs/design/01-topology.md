@@ -43,7 +43,7 @@ powers and restores its own rail; the fixture only shorts it briefly through
 Rs. This suits clipping onto arbitrary boards. Rs limits the current drawn from
 the target supply during the glitch and sets how hard the rail is pulled down.
 
-An optional self-supply footprint (J2 and a DNP series jumper Rsup) lets a
+An optional self-supply footprint (J2 and a DNP series jumper R7) lets a
 bench supply source the target rail through the fixture instead, for cases
 where the target is not powered on its own. It is not populated by default.
 

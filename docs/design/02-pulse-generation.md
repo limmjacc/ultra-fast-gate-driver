@@ -71,7 +71,7 @@ is built to be changed on the bench:
 
 A hardware one-shot (U3, 74LVC1G123 monostable) is triggered by the same
 squared edge and holds its Q output high for a fixed window Tmax, set by an
-external Rmt and Cmt. An AND gate (U4, 74LVC1G08) forms IN+ as the direct
+external R6 and C4. An AND gate (U4, 74LVC1G08) forms IN+ as the direct
 trigger ANDed with Q. After Tmax the window closes and IN+ is forced low, so
 the driver output goes low and the FET turns off, regardless of what the
 trigger or the delay element does. This is the primary protection and does not

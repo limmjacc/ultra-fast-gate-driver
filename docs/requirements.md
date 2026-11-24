@@ -57,7 +57,7 @@ what this does and does not test (it is not a surge-immunity test).
 | Target rail's real node capacitance once decoupling is removed | Estimated from the FET's COSS; depends on the specific board. Small nodes (a few mm of copper) are the design assumption |
 | Glitch depth/duration sweep | The board keeps both knobs adjustable (Rs and the delay element); the sweep test code is written separately |
 | Delay-element value set | Parallel RC footprints (roughly 2 to 50 ns span); exact values chosen per target on the bench |
-| Max on-time value | Rmt/Cmt set it; pick a value well above the intended glitch but short enough to protect Rs |
+| Max on-time value | R6/C4 set it; pick a value well above the intended glitch but short enough to protect Rs |
 | Bench supply current limit (self-supply mode) | Set deliberately against the stuck-on table in [design/06-safety-and-protection.md](design/06-safety-and-protection.md) |
 | Form factor and connectors | Header and pad choices pending layout |
 | Number of channels | One |

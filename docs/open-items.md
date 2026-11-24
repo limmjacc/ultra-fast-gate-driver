@@ -41,7 +41,7 @@ Items resolved earlier and later superseded are in
 
 ## Safety and protection
 
-11. Choose Tmax (Rmt, Cmt) for the max-on-time one-shot: well above the intended
+11. Choose Tmax (R6, C4) for the max-on-time one-shot: well above the intended
     glitch, short enough to protect Rs from a stuck-on fault.
 12. Size the Rs footprints for stuck-on power at 5.5 V, or fuse them. Pick F1's
     rating against the stuck-on currents in
@@ -67,7 +67,7 @@ Items resolved earlier and later superseded are in
 18. Scope-friendly probe pad at the target node with a short ground return
     (TP5 is placed; confirm its ground return on layout).
 19. **Done 2026-11-23:** real connector part numbers picked and verified in
-    stock on digikey.ca (J1 Sullins PRPC004SAAN-RC, J2 and JT Sullins
+    stock on digikey.ca (J1 Sullins PRPC004SAAN-RC, J2 and J3 Sullins
     PRPC002SAAN-RC). See [reference/bom.md](reference/bom.md).
 
 24. **Done 2026-11-23:** full BOM picked and verified. Every part, including all

@@ -6671,7 +6671,7 @@
 		(in_pos_files yes)
 		(dnp yes)
 		(uuid "0f23932b-d373-4403-ac73-cdeca673ecbe")
-		(property "Reference" "Rsup"
+		(property "Reference" "R7"
 			(at 339.09 168.402 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6797,7 +6797,7 @@
 		(instances
 			(project "ultra-fast-gate-driver"
 				(path "/ae3ac88c-4adb-4982-9cca-c2bd58f2d232"
-					(reference "Rsup")
+					(reference "R7")
 					(unit 1)
 				)
 			)
@@ -8083,7 +8083,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "32cd9c30-bb64-4960-9a2d-3e956440461f")
-		(property "Reference" "Rd"
+		(property "Reference" "R5"
 			(at 45.466 88.646 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8209,7 +8209,7 @@
 		(instances
 			(project "ultra-fast-gate-driver"
 				(path "/ae3ac88c-4adb-4982-9cca-c2bd58f2d232"
-					(reference "Rd")
+					(reference "R5")
 					(unit 1)
 				)
 			)
@@ -10291,7 +10291,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "9cfa1d47-b2d7-4ed7-9d13-6fc16286b568")
-		(property "Reference" "Cd"
+		(property "Reference" "C3"
 			(at 76.454 91.44 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10417,7 +10417,7 @@
 		(instances
 			(project "ultra-fast-gate-driver"
 				(path "/ae3ac88c-4adb-4982-9cca-c2bd58f2d232"
-					(reference "Cd")
+					(reference "C3")
 					(unit 1)
 				)
 			)
@@ -11042,7 +11042,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "b61cd055-c428-44ee-83be-f1428477e4a9")
-		(property "Reference" "Cmt"
+		(property "Reference" "C4"
 			(at 38.354 177.419 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11168,7 +11168,7 @@
 		(instances
 			(project "ultra-fast-gate-driver"
 				(path "/ae3ac88c-4adb-4982-9cca-c2bd58f2d232"
-					(reference "Cmt")
+					(reference "C4")
 					(unit 1)
 				)
 			)
@@ -11696,7 +11696,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "c824628c-6db5-4a22-80d0-da261ab3db39")
-		(property "Reference" "Rmt"
+		(property "Reference" "R6"
 			(at 38.608 148.717 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11822,7 +11822,7 @@
 		(instances
 			(project "ultra-fast-gate-driver"
 				(path "/ae3ac88c-4adb-4982-9cca-c2bd58f2d232"
-					(reference "Rmt")
+					(reference "R6")
 					(unit 1)
 				)
 			)
@@ -12567,7 +12567,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "dfe4c0fd-2da3-456b-b421-240ce50fd88a")
-		(property "Reference" "JT"
+		(property "Reference" "J3"
 			(at 320.04 122.936 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12693,7 +12693,7 @@
 		(instances
 			(project "ultra-fast-gate-driver"
 				(path "/ae3ac88c-4adb-4982-9cca-c2bd58f2d232"
-					(reference "JT")
+					(reference "J3")
 					(unit 1)
 				)
 			)
